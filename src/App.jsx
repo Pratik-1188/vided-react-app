@@ -2,6 +2,7 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import { Home } from "./components/Home";
 import FrameFusion from "./components/FrameFusion";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const App = () => {
   return (
