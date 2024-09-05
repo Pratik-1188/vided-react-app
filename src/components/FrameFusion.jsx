@@ -103,17 +103,6 @@ const FrameFusion = () => {
     setImages(updatedImages);
   };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   if (images.length === 0) {
-  //     setErrorMessage("Please upload at least 1 image.");
-  //     return;
-  //   }
-  //   alert(
-  //     `Selected: \nDuration: ${duration}\nBackground Music: ${music}\nEffect: ${effect}`
-  //   );
-  // };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -121,26 +110,6 @@ const FrameFusion = () => {
       setErrorMessage("Please upload at least 1 image.");
       return;
     }
-
-    // Log all form values
-    console.log("Duration:", duration);
-    console.log("Background Music:", music);
-    console.log("Effect:", effect);
-
-    // Create an array of image file names
-    const imageFiles = images.map((image) => image.file.name);
-    console.log("Uploaded Images (String Array):", imageFiles);
-
-    // Prepare the JSON object for logging
-    const jsonData = {
-      duration,
-      music,
-      effect,
-      images: imageFiles,
-    };
-
-    // Log the JSON object
-    console.log("JSON Payload:", JSON.stringify(jsonData));
 
     // Create a FormData object to send the data (for file uploads)
     const formData = new FormData();
@@ -167,7 +136,6 @@ const FrameFusion = () => {
 
       // Reset the form or provide success feedback
       setErrorMessage(""); // Clear error message
-      setImages([]); // Clear images
     } catch (error) {
       console.error(
         "Error:",
