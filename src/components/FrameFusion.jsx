@@ -8,6 +8,11 @@ import axios from "axios";
 
 const ItemType = "IMAGE";
 
+/* TODO:
+  Upload tab shows count as intial even if u delete the img after upload
+  limit only image upload
+*/
+
 const DraggableImage = ({ image, index, moveImage, handleRemove }) => {
   const [, ref] = useDrag({
     type: ItemType,
