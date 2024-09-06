@@ -7,7 +7,7 @@ export const Home = () => {
       <nav>
         <ul>
           <li>
-            <Link to="/frame-fusion">Frame Fusion</Link>
+            <Link to="/videoslideshow">Video Slideshow</Link>
           </li>
         </ul>
       </nav>

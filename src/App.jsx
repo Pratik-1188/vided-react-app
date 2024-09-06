@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import { Home } from "./components/Home";
-import FrameFusion from "./components/FrameFusion";
+import VideoSlideshow from "./components/VideoSlideshow";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const App = () => {
@@ -9,7 +9,7 @@ const App = () => {
     <>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/frame-fusion" element={<FrameFusion />} />
+        <Route path="/videoslideshow" element={<VideoSlideshow />} />
       </Routes>
     </>
   );

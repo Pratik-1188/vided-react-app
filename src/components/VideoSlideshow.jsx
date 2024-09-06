@@ -71,7 +71,7 @@ const DraggableImage = ({ image, index, moveImage, handleRemove }) => {
   );
 };
 
-const FrameFusion = () => {
+const VideoSlideshow = () => {
   const [duration, setDuration] = useState("3");
   const [music, setMusic] = useState("Classical");
   const [effect, setEffect] = useState("Zoom In");
@@ -116,24 +116,25 @@ const FrameFusion = () => {
       return;
     }
 
-    // Create a FormData object to send the data (for file uploads)
+    // Create a FormData object to hold the form values and files
     const formData = new FormData();
     formData.append("duration", duration);
     formData.append("music", music);
     formData.append("effect", effect);
 
-    // Append image files to the FormData (use 'images[]' to send as an array)
-    images.forEach((image) => {
-      formData.append("images[]", image.file); // The key here is 'images[]' to match with List<MultipartFile> in the backend
+    // Append each file to the FormData object
+    images.forEach((image, index) => {
+      formData.append("images", image.file); // assuming image.file is the file object
     });
 
-    // Example endpoint (replace with your actual endpoint)
-    const endpoint = "http://localhost:8080/frame-fusion";
+    console.log(formData); // Optional: for debugging
+
+    const endpoint = "http://localhost:8080/videoslideshow";
 
     try {
       const response = await axios.post(endpoint, formData, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "multipart/form-data", // Set correct header
         },
       });
 
@@ -229,4 +230,4 @@ const FrameFusion = () => {
   );
 };
 
-export default FrameFusion;
+export default VideoSlideshow;
