@@ -77,6 +77,7 @@ const VideoSlideshow = () => {
   const [effect, setEffect] = useState("Zoom In");
   const [images, setImages] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
+  const [videoUrl, setVideoUrl] = useState(null); // To store the video URL
 
   // Handle image upload
   const handleImageUpload = (e) => {
@@ -134,11 +135,15 @@ const VideoSlideshow = () => {
         headers: {
           "Content-Type": "multipart/form-data", // Set correct header
         },
+        responseType: "blob", // Expect binary data (Blob) from the server
       });
 
-      console.log("Server Response:", response.data);
+      // Create a video URL from the response blob
+      const videoBlob = new Blob([response.data], { type: "video/mp4" });
+      const videoUrl = URL.createObjectURL(videoBlob);
 
-      // Reset the form or provide success feedback
+      // Set the video URL to display the video
+      setVideoUrl(videoUrl);
       setErrorMessage(""); // Clear error message
     } catch (error) {
       console.error(
@@ -224,6 +229,17 @@ const VideoSlideshow = () => {
           Submit
         </Button>
       </Form>
+
+      {/* Video Display Section */}
+      {videoUrl && (
+        <div>
+          <h3>Your Generated Video:</h3>
+          <video width="600" controls>
+            <source src={videoUrl} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      )}
     </DndProvider>
   );
 };
