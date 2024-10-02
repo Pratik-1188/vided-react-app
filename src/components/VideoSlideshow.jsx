@@ -127,8 +127,6 @@ const VideoSlideshow = () => {
       formData.append("images", image.file); // assuming image.file is the file object
     });
 
-    console.log(formData); // Optional: for debugging
-
     const endpoint = "http://localhost:8080/videoslideshow";
 
     try {
