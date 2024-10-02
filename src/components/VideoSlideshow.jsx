@@ -8,11 +8,6 @@ import axios from "axios";
 
 const ItemType = "IMAGE";
 
-/* TODO:
-  Upload tab shows count as intial even if u delete the img after upload
-  limit only image upload
-*/
-
 const DraggableImage = ({ image, index, moveImage, handleRemove }) => {
   const [, ref] = useDrag({
     type: ItemType,
@@ -157,47 +152,6 @@ const VideoSlideshow = () => {
   return (
     <DndProvider backend={HTML5Backend}>
       <Form onSubmit={handleSubmit}>
-        {/* Duration Dropdown */}
-        <Form.Group controlId="formDuration">
-          <Form.Label>Duration</Form.Label>
-          <Form.Control
-            as="select"
-            value={duration}
-            onChange={(e) => setDuration(e.target.value)}
-          >
-            <option value="3">3 seconds</option>
-            <option value="5">5 seconds</option>
-            <option value="7">7 seconds</option>
-          </Form.Control>
-        </Form.Group>
-
-        {/* Music Dropdown */}
-        <Form.Group controlId="formMusic">
-          <Form.Label>Background Music</Form.Label>
-          <Form.Control
-            as="select"
-            value={music}
-            onChange={(e) => setMusic(e.target.value)}
-          >
-            <option value="Classical">Classical</option>
-            <option value="Pop">Pop</option>
-            <option value="Rock">Rock</option>
-          </Form.Control>
-        </Form.Group>
-
-        {/* Effect Dropdown */}
-        <Form.Group controlId="formEffect">
-          <Form.Label>Effect</Form.Label>
-          <Form.Control
-            as="select"
-            value={effect}
-            onChange={(e) => setEffect(e.target.value)}
-          >
-            <option value="Zoom In">Zoom In</option>
-            <option value="Zoom Out">Zoom Out</option>
-          </Form.Control>
-        </Form.Group>
-
         {/* Image Upload Section */}
         <Form.Group controlId="formFile" className="mb-3">
           <Form.Label>Upload Images (Max 6)</Form.Label>
