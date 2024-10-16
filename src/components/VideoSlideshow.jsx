@@ -5,6 +5,7 @@ import ButtonGroup from "react-bootstrap/ButtonGroup";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import axios from "axios";
+import { getdomain } from "../utils";
 
 const ItemType = "IMAGE";
 
@@ -40,6 +41,7 @@ const DraggableImage = ({ image, index, moveImage, handleRemove }) => {
         rounded
         thumbnail
         style={{ width: "100px", height: "100px" }}
+        // className="w-100 h-100"
       />
 
       <ButtonGroup aria-label="Third group">
@@ -123,7 +125,7 @@ const VideoSlideshow = () => {
       formData.append("images", image.file); // assuming image.file is the file object
     });
 
-    const endpoint = "http://localhost:8080/videoslideshow";
+    const endpoint = `http://localhost:8080/videoslideshow`;
 
     try {
       const response = await axios.post(endpoint, formData, {
@@ -150,51 +152,55 @@ const VideoSlideshow = () => {
   };
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <Form onSubmit={handleSubmit}>
-        {/* Image Upload Section */}
-        <Form.Group controlId="formFile" className="mb-3">
-          <Form.Label>Upload Images (Max 6)</Form.Label>
-          <Form.Control
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={handleImageUpload}
-          />
-        </Form.Group>
-
-        {/* Display Error Message */}
-        {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
-
-        {/* Drag and Drop Image Thumbnails */}
-        <div className="image-preview" style={{ display: "flex" }}>
-          {images.map((image, index) => (
-            <DraggableImage
-              key={image.id}
-              index={index}
-              image={image}
-              moveImage={moveImage}
-              handleRemove={handleRemove}
+    <div className="container vh-100 d-flex  flex-column justify-content-center align-items-center gap-5">
+      <DndProvider backend={HTML5Backend}>
+        <Form onSubmit={handleSubmit} className="vw-100 d-flex flex-column justify-content-center align-items-center gap-4">
+          {/* Image Upload Section */}
+          <Form.Group controlId="formFile" className="d-flex flex-column justify-content-center align-items-center gap-4">
+            <Form.Label className="fs-3 fw-bold">Upload Images (Max 6)</Form.Label>
+            <Form.Control
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleImageUpload}
+              className="bg-transparent text-white"
+              size="lg"
             />
-          ))}
-        </div>
+          </Form.Group>
 
-        <Button variant="primary" type="submit">
-          Submit
-        </Button>
-      </Form>
+          {/* Display Error Message */}
+          {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
 
-      {/* Video Display Section */}
-      {videoUrl && (
-        <div>
-          <h3>Your Generated Video:</h3>
-          <video width="600" controls>
-            <source src={videoUrl} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-        </div>
-      )}
-    </DndProvider>
+          {/* Drag and Drop Image Thumbnails */}
+          <div className="image-preview" style={{ display: "flex" }}>
+            {images.map((image, index) => (
+              <DraggableImage
+                key={image.id}
+                index={index}
+                image={image}
+                moveImage={moveImage}
+                handleRemove={handleRemove}
+              />
+            ))}
+          </div>
+
+          <Button variant="primary"  className="btn btn-primary rounded-pill btn-lg" type="submit">
+            Submit
+          </Button>
+        </Form>
+
+        {/* Video Display Section */}
+        {videoUrl && (
+          <div>
+            <h3>Your Generated Video:</h3>
+            <video width="600" controls>
+              <source src={videoUrl} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        )}
+      </DndProvider>
+    </div>
   );
 };
 

@@ -1,0 +1,22 @@
+.header {
+    font-size: 3rem;
+    color: #343a40; /* Bootstrap's text color */
+    white-space: nowrap; /* Prevent wrapping */
+    overflow: hidden; /* Hide overflow */
+    border-right: 3px solid; /* Cursor effect */
+    animation: blink-caret 0.75s step-end infinite; /* Blinking cursor */
+}
+
+@keyframes blink-caret {
+    50% {
+        border-color: transparent; /* Blink effect */
+    }
+}
+
+
+.page-background {
+    background-color: #0a0f20;
+    background-image: radial-gradient(ellipse 40% 100% at 60% -10%, rgba(119, 138, 232, .3), rgba(119, 138, 232, 0));
+    background-repeat: no-repeat;
+    color: #fff;
+}
