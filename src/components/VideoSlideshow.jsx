@@ -14,7 +14,7 @@ const DraggableImage = ({ image, index, moveImage, handleRemove }) => {
     type: ItemType,
     item: { index },
   });
- 
+
   const [, drop] = useDrop({
     accept: ItemType,
     hover: (draggedItem) => {
@@ -106,6 +106,70 @@ const VideoSlideshow = () => {
     setImages(updatedImages);
   };
 
+  function resizeImage(file) {
+    return new Promise((resolve, reject) => {
+      const finalWidth = 720;
+      const finalHeight = 1280;
+
+      const img = new window.Image();
+      img.src = URL.createObjectURL(file);
+
+      img.onload = () => {
+        const aspectRatio = img.width / img.height;
+        let newWidth, newHeight;
+
+        // Calculate new dimensions
+        if (img.width > img.height) {
+          newWidth = finalWidth;
+          newHeight = newWidth / aspectRatio;
+
+          if (newHeight > finalHeight) {
+            newHeight = finalHeight;
+            newWidth = newHeight * aspectRatio;
+          }
+        } else {
+          newHeight = finalHeight;
+          newWidth = newHeight * aspectRatio;
+
+          if (newWidth > finalWidth) {
+            newWidth = finalWidth;
+            newHeight = newWidth / aspectRatio;
+          }
+        }
+
+        const canvas = document.createElement("canvas");
+        canvas.width = finalWidth;
+        canvas.height = finalHeight;
+
+        const ctx = canvas.getContext("2d");
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = "high";
+
+        // Fill the canvas with a white background
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, finalWidth, finalHeight);
+
+        // Center the image on the canvas
+        const x = (finalWidth - newWidth) / 2;
+        const y = (finalHeight - newHeight) / 2;
+        ctx.drawImage(img, x, y, newWidth, newHeight);
+
+        // Convert canvas to Blob and resolve the Promise
+        canvas.toBlob((blob) => {
+          if (blob) {
+            resolve(blob);
+          } else {
+            reject(new Error("Resizing failed"));
+          }
+        }, file.type);
+      };
+
+      img.onerror = () => {
+        reject(new Error("Failed to load image"));
+      };
+    });
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -114,50 +178,62 @@ const VideoSlideshow = () => {
       return;
     }
 
-    // Create a FormData object to hold the form values and files
     const formData = new FormData();
     formData.append("duration", duration);
     formData.append("music", music);
     formData.append("effect", effect);
 
-    // Append each file to the FormData object
-    images.forEach((image, index) => {
-      formData.append("images", image.file); // assuming image.file is the file object
-    });
+    for (const image of images) {
+      const resizedImage = await resizeImage(image.file); // Await the Promise
+      formData.append("images", resizedImage); // Append the resized Blob
+    }
 
     const endpoint = `${getdomain()}/videoslideshow`;
 
     try {
       const response = await axios.post(endpoint, formData, {
         headers: {
-          "Content-Type": "multipart/form-data", // Set correct header
+          "Content-Type": "multipart/form-data",
         },
-        responseType: "blob", // Expect binary data (Blob) from the server
+        responseType: "blob",
       });
 
-      // Create a video URL from the response blob
-      const videoBlob = new Blob([response.data], { type: "video/mp4" });
-      const videoUrl = URL.createObjectURL(videoBlob);
+      // Clear the previous video URL to free memory
+      if (videoUrl) {
+        URL.revokeObjectURL(videoUrl);
+      }
 
-      // Set the video URL to display the video
-      setVideoUrl(videoUrl);
-      setErrorMessage(""); // Clear error message
+      const videoBlob = new Blob([response.data], { type: "video/webm" });
+      const newVideoUrl = URL.createObjectURL(videoBlob);
+
+      setVideoUrl(newVideoUrl);
+      setErrorMessage("");
     } catch (error) {
       console.error(
         "Error:",
         error.response ? error.response.data : error.message
       );
-      setErrorMessage("There was an error submitting the form.");
+      setErrorMessage(
+        "There was an error submitting the form. Please try again."
+      );
     }
   };
 
   return (
     <div className="container vh-100 d-flex  flex-column justify-content-center align-items-center gap-5">
       <DndProvider backend={HTML5Backend}>
-        <Form onSubmit={handleSubmit} className="vw-100 d-flex flex-column justify-content-center align-items-center gap-4">
+        <Form
+          onSubmit={handleSubmit}
+          className="vw-100 d-flex flex-column justify-content-center align-items-center gap-4"
+        >
           {/* Image Upload Section */}
-          <Form.Group controlId="formFile" className="d-flex flex-column justify-content-center align-items-center gap-4">
-            <Form.Label className="fs-3 fw-bold">Upload Images (Max 6)</Form.Label>
+          <Form.Group
+            controlId="formFile"
+            className="d-flex flex-column justify-content-center align-items-center gap-4"
+          >
+            <Form.Label className="fs-3 fw-bold">
+              Upload Images (Max 6)
+            </Form.Label>
             <Form.Control
               type="file"
               accept="image/*"
@@ -184,7 +260,11 @@ const VideoSlideshow = () => {
             ))}
           </div>
 
-          <Button variant="primary"  className="btn btn-primary rounded-pill btn-lg" type="submit">
+          <Button
+            variant="primary"
+            className="btn btn-primary rounded-pill btn-lg"
+            type="submit"
+          >
             Submit
           </Button>
         </Form>
