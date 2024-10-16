@@ -14,7 +14,7 @@ const DraggableImage = ({ image, index, moveImage, handleRemove }) => {
     type: ItemType,
     item: { index },
   });
-
+ 
   const [, drop] = useDrop({
     accept: ItemType,
     hover: (draggedItem) => {
@@ -125,7 +125,7 @@ const VideoSlideshow = () => {
       formData.append("images", image.file); // assuming image.file is the file object
     });
 
-    const endpoint = `http://localhost:8080/videoslideshow`;
+    const endpoint = `${getdomain()}/videoslideshow`;
 
     try {
       const response = await axios.post(endpoint, formData, {
