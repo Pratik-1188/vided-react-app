@@ -4,6 +4,7 @@ export const getdomain = () => {
     window.location.host.includes("localhost")
   )
     return "http://localhost:8080";
+  // return "vided-spring-boot-app-bch3adbmgafbesac.centralindia-01.azurewebsites.net:8080";
   else
-    return "https://vided-spring-boot-app.happysand-0cd6e089.centralindia.azurecontainerapps.io";
+    return "vided-spring-boot-app-bch3adbmgafbesac.centralindia-01.azurewebsites.net:8080";
 };
